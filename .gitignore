@@ -1,0 +1,13 @@
+.env
+.vscode
+.pytest_cache
+/*/**/__pycache__
+/src/jre-*.pickle
+/src/lex-*.json
+/src/cache
+script.txt
+data/jre/audio
+/*/**/.DS_Store
+.DS_Store
+src/tfidf-*.pickle
+src/.ipynb_checkpoints
