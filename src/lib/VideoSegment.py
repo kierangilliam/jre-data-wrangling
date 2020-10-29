@@ -1,8 +1,6 @@
 import numpy as np
 import cv2
 from matplotlib import pyplot as plt
-from IPython.display import Video
-import plotly.express as px
 import pandas as pd
 
 
@@ -31,6 +29,14 @@ def get_frames(cap, n=1000, start=120, skip=15):
             cap.read()
 
     return np.array(frames), i, no_more_frames
+
+
+def get_averages(frames):
+    averages = []
+    for i, frame in enumerate(frames[1:]):
+        avg = np.mean([frame, frames[i]])
+        averages.append(avg)
+    return np.array(averages)
 
 
 # Loop over entire video and compute averages for all of the frames
