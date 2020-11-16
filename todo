@@ -1,3 +1,5 @@
 [] comments
 [] stats
 Check how many captions I don't have
+
+The avg's dataste can be cleaned up by a sort of KNN approach where we affirm that  a frame belongs to a particular distribution

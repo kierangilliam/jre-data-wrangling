@@ -58,6 +58,40 @@ class Episode:
     def __repr__(self):
         return f"[{self.video_id}] {self.title}"
 
+    @property
+    def is_main_episode(ep):
+        name = re.findall(r"#\d\d?\d?\d? ?-?-? .*?([A-Z].*)", ep.title)
+        skip_best = "Best of " in ep.title
+        skip_toon = "JRE Toon" in ep.title
+        skip_fight_companion = "Fight Companion" in ep.title
+        skip_mma = "JRE MMA Show" in ep.title
+        skip_from_jre = "from Joe Rogan" in ep.title or "from JRE" in ep.title
+        skip_questions = "Questions Everything" in ep.title
+        if (
+            skip_best
+            or skip_toon
+            or skip_fight_companion
+            or skip_from_jre
+            or skip_mma
+            or skip_questions
+        ):
+            # "from Joe Rogan Experience" not in ep.title
+            return False
+        elif len(name) == 0:
+            # NOT CAPTURED
+            # print(ep.title)
+            return False
+        else:
+            name = name[0]
+            if not ep.number:
+                return False
+
+            if "part" in ep.title.lower():
+                print(ep.title, "HAS PART IN IT")
+
+            return True
+        return False
+
 
 class EpisodeFactory:
     def __init__(self, folder_name):
@@ -68,7 +102,7 @@ class EpisodeFactory:
         file = open(os.path.join(self.folder, filename), "r")
         return json.loads(file.read()), file
 
-    def create_episodes(self) -> List[Episode]:
+    def create_episodes(self, skip_comments=True) -> List[Episode]:
         """Generates Episode objects from JSON"""
         episodes: List[Episode] = []
 
@@ -86,6 +120,8 @@ class EpisodeFactory:
             number = re.findall(r"#\d\d?\d?\d?", episode.title)
             if len(number) > 0:
                 episode.number = int(number[0].split("#")[1])
+            else:
+                episode.number = None
             # else:
             #     print("Could not get number for episode", episode.title)
 
@@ -104,23 +140,26 @@ class EpisodeFactory:
                 episode.captions.append(caption)
         captions_file.close()
 
-        ### Get comments for each episode
-        print("loading comments...")
-        comments_json, comments_file = self.get_json("comments.json")
-        print("\topened file...")
-        for video_id, comments in comments_json.items():
-            episode = [e for e in episodes if e.video_id == video_id][0]
-            episode.comments = []
-            for c in comments:
-                if "topLevelComment" in c["snippet"]:
-                    c = c["snippet"]["topLevelComment"]["snippet"]
-                else:
-                    c = c["snippet"]
-                if c["likeCount"] < 5:
-                    continue
-                comment = Comment(text_original=c["textOriginal"], likes=c["likeCount"])
-                episode.comments.append(comment)
-        comments_file.close()
+        if not skip_comments:
+            ### Get comments for each episode
+            print("loading comments...")
+            comments_json, comments_file = self.get_json("comments.json")
+            print("\topened file...")
+            for video_id, comments in comments_json.items():
+                episode = [e for e in episodes if e.video_id == video_id][0]
+                episode.comments = []
+                for c in comments:
+                    if "topLevelComment" in c["snippet"]:
+                        c = c["snippet"]["topLevelComment"]["snippet"]
+                    else:
+                        c = c["snippet"]
+                    if c["likeCount"] < 5:
+                        continue
+                    comment = Comment(
+                        text_original=c["textOriginal"], likes=c["likeCount"]
+                    )
+                    episode.comments.append(comment)
+            comments_file.close()
 
         # stats_json
 
