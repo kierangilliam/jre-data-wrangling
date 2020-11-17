@@ -5,6 +5,7 @@ Format the Youtube API responses into Episode objects
 import json
 from typing import List
 from dataclasses import dataclass
+import numpy as np
 import os
 import re
 
@@ -40,6 +41,7 @@ class Episode:
     published_at: str
     comments: List[Comment] = None
     captions: List[Caption] = None
+    video_averages: np.ndarray = None
 
     def __init__(self):
         pass
@@ -85,9 +87,6 @@ class Episode:
             name = name[0]
             if not ep.number:
                 return False
-
-            if "part" in ep.title.lower():
-                print(ep.title, "HAS PART IN IT")
 
             return True
         return False
@@ -140,8 +139,20 @@ class EpisodeFactory:
                 episode.captions.append(caption)
         captions_file.close()
 
+        ### Get video frame averages
+        AVERAGES = self.folder + "/averages"
+        for file in os.listdir(AVERAGES):
+            video_id = file.strip(".npy")
+            try:
+                episode = [e for e in episodes if e.video_id == video_id][0]
+                episode.video_averages = np.load(
+                    f"{AVERAGES}/{file}", allow_pickle=True
+                )
+            except Exception as e:
+                print("Could not load video average data for ", video_id)
+
+        ### Get comments for each episode
         if not skip_comments:
-            ### Get comments for each episode
             print("loading comments...")
             comments_json, comments_file = self.get_json("comments.json")
             print("\topened file...")
