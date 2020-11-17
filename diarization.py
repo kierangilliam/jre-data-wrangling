@@ -9,9 +9,10 @@ import os
 from pyannote.core import Segment
 import torch
 import pickle
+from time import perf_counter as pc
 
 
-pipeline = torch.hub.load('pyannote/pyannote-audio', 'dia', device='cpu')
+pipeline = torch.hub.load('pyannote/pyannote-audio', 'dia')
 CACHE = "./data/jre/diarization/"
 
 
@@ -21,33 +22,33 @@ def convert_to_wav(mp4):
     sound = pydub.AudioSegment.from_file(mp4, format="mp4")
     print("EXPORT")
     #sound.export(W(mp4), format="wav")
-    sound.export("./JOE.wav", format="wav")
     sound = None
     return W(mp4)
 
 
 def process_files(filenames):
-    print(len(filenames))
     N = lambda x: CACHE + x.split("../videos/")[1].split('.mp4')[0] + ".pkl"
     filenames = [f for f in filenames if not os.path.exists(N(f))]
-
-    torch.set_num_threads(multiprocessing.cpu_count())
-
+    print(len(filenames))
    
     def process():
     #    sys.stdout = open("DIARIZATION_" + str(os.getpid()) + ".out", "a")
     #    sys.stderr = open(str(os.getpid()) + "_error.out", "a")
 
         for i, fn in enumerate(filenames):
+            t_start = pc()
             print(f"{round(i/len(filenames)*100,3)} - [{i}/{len(filenames)}]", fn, flush=True)
 
             #wav = convert_to_wav(fn)
-            wav = "test.wav"
+            wav = "JOE.wav"
+            #wav = "test.wav"
+            print(f"\tSize of file {round(os.path.getsize(wav)/1024/1024/1024,3)}GB")
             print(f"\tDiarization {wav}...", flush=True)
             diarization = pipeline({'audio': wav})
-            print(f"\tDone...", flush=True)
+            print(f"\tDone... {diarization.labels()}", flush=True)
+            print(f"\tTime elapsed: {pc()-t_start}")
 
-            #os.system(f"rm '{wav}'")
+            os.system(f"rm '{wav}'")
 
             #with open(N(fn), "wb") as f:
              #   f.write(pickle.dump(diarization))
@@ -63,9 +64,18 @@ def chunks(lst, n):
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     PROCS = 1
 
     files = list(glob.glob("../videos/*.mp4"))
+=======
+    files = list(glob.glob("../videos/*.mp4"))
+    process_files(files)()
+
+    """
+    PROCS = 1
+
+>>>>>>> 095da7cc889a2ea6d0a7f26be87d010e1f71d4c8
     files = list(chunks(files, len(files) // PROCS))
     starttime = time.time()
     processes = []
@@ -77,4 +87,8 @@ if __name__ == "__main__":
 
     for process in processes:
         process.join()
+<<<<<<< HEAD
+=======
+    """
+>>>>>>> 095da7cc889a2ea6d0a7f26be87d010e1f71d4c8
 

@@ -21,6 +21,11 @@ API_KEY = "AIzaSyDVxHE-OCeVAFC2AUx8GWo63P5QtHPvngQ"
 
 scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 
+UPLOADS = "data/jre/uploads.json"
+COMMENTS = "data/jre/comments.json"
+CAPTIONS = "data/jre/captions.json"
+CAPTIONS_FAILED = "data/jre/captions_failure.json"
+
 
 def main():
     # Disable OAuthlib's HTTPS verification when running locally.
@@ -68,33 +73,40 @@ def main():
         return items
 
     # uploads = get_uploads("UUzQUP1qoWDoEbmsQxvdjxgQ")
-    # with open("uploads.json", "w") as f:
+    # with open(UPLOADS, "w") as f:
     #     f.write(json.dumps(uploads))
 
-    # captions = {}
-    # failed_to_get_captions = []
-    # with open("uploads.json", "r") as f:
-    #     uploads = json.loads(f.read())
+    def get_captions():
+        failed_to_get_captions = []
+        with open(CAPTIONS, "r") as f:
+            captions = json.loads(f.read())
+        with open(UPLOADS, "r") as f:
+            uploads = json.loads(f.read())
 
-    #     for i, upload in enumerate(uploads):
-    #         print(f"{i}/{len(uploads)}")
-    #         id = upload["contentDetails"]["videoId"]
+            for i, upload in tqdm(enumerate(uploads)):
+                print(f"{i}/{len(uploads)}")
+                id = upload["contentDetails"]["videoId"]
 
-    #         try:
-    #             caption = YouTubeTranscriptApi.get_transcript(id)
-    #             captions[id] = caption
-    #         except:
-    #             failed_to_get_captions.append(id)
+                if id in captions:
+                    continue
 
-    #         # save progress
-    #         if i % 10 == 0:
-    #             with open("captions.json", "w") as f:
-    #                 f.write(json.dumps(captions))
+                try:
+                    caption = YouTubeTranscriptApi.get_transcript(id)
+                    captions[id] = caption
+                except:
+                    failed_to_get_captions.append(id)
 
-    # with open("captions.json", "w") as f:
+                # save progress
+                if i % 10 == 0:
+                    with open(CAPTIONS, "w") as f:
+                        f.write(json.dumps(captions))
+        return captions, failed_to_get_captions
+
+    # captions, failed_to_get_captions = get_captions()
+    # with open(CAPTIONS, "w") as f:
     #     f.write(json.dumps(captions))
 
-    # with open("failed_to_get_captions.json") as f:
+    # with open(CAPTIONS_FAILED) as f:
     #     f.write(json.dumps(failed_to_get_captions))
 
     ########################################
@@ -136,8 +148,6 @@ def main():
 
     #######################################
     # Get comments and statistics for each video
-    UPLOADS = "data/jre/uploads.json"
-    COMMENTS = "data/jre/comments.json"
     # with open(UPLOADS, "r") as f:
     #     uploads = json.loads(f.read())
 

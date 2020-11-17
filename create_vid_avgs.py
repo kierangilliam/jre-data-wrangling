@@ -8,8 +8,8 @@ import glob
 import os
 
 
-avg_cache = "./data/jre/videos/averages"
-avgfn = lambda x: avg_cache + x.split("../videos/")[1].split('.mp4')[0] + f".average"
+avg_cache = "./data/jre/averages_skip_5/"
+avgfn = lambda x: avg_cache + x.split("../videos/")[1].split(".mp4")[0]
 
 def process_files(filenames):
     print(len(filenames))
@@ -19,7 +19,11 @@ def process_files(filenames):
         sys.stderr = open(str(os.getpid()) + "_error.out", "a")
 
         for i, fn in enumerate(filenames):
-            print(f"{round(i/len(filenames),3)*100} - [{i}/{len(filenames)}]", fn, flush=True)
+            print(
+                f"{round(i/len(filenames),3)*100} - [{i}/{len(filenames)}]",
+                fn,
+                flush=True,
+            )
             averages, total_frames = averages_for_video(fn)
             np.save(avgfn(fn), [averages, total_frames])
 
