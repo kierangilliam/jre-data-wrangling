@@ -1,4 +1,6 @@
 import multiprocessing
+import sys
+
 from src.lib.VideoSegment import averages_for_video
 import numpy as np
 import time
@@ -6,16 +8,18 @@ import glob
 import os
 
 
+avg_cache = "./data/jre/videos/averages"
+avgfn = lambda x: avg_cache + x.split("../videos/")[1].split('.mp4')[0] + f".average"
+
 def process_files(filenames):
-    avg_cache = "./data/jre/videos/averages"
-    avgfn = lambda x: avg_cache + x + f".average"
+    print(len(filenames))
 
     def process():
-        for fn in filenames:
-            if os.path(avgfn(fn)).exists:
-                print(fn, "exists, skipping...")
-                continue
+        sys.stdout = open("avgs_" + str(os.getpid()) + ".out", "a")
+        sys.stderr = open(str(os.getpid()) + "_error.out", "a")
 
+        for i, fn in enumerate(filenames):
+            print(f"{round(i/len(filenames),3)*100} - [{i}/{len(filenames)}]", fn, flush=True)
             averages, total_frames = averages_for_video(fn)
             np.save(avgfn(fn), [averages, total_frames])
 
@@ -29,10 +33,11 @@ def chunks(lst, n):
 
 
 if __name__ == "__main__":
-    PROCS = 4
+    PROCS = 8
 
     files = list(glob.glob("../videos/*.mp4"))
-    files = list(chunks(files, PROCS))
+    files = [f for f in files if not os.path.exists(avgfn(f) + ".npy")]
+    files = list(chunks(files, len(files) // PROCS))
     starttime = time.time()
     processes = []
 
