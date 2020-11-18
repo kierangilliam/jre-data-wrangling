@@ -8,7 +8,7 @@ import glob
 import os
 
 
-avg_cache = "./data/jre/averages_skip_5/"
+avg_cache = "./data/jre/averages_fps_divis_5/"
 avgfn = lambda x: avg_cache + x.split("../videos/")[1].split(".mp4")[0]
 
 def process_files(filenames):
@@ -24,7 +24,7 @@ def process_files(filenames):
                 fn,
                 flush=True,
             )
-            averages, total_frames = averages_for_video(fn)
+            averages, total_frames = averages_for_video(fn, fps_divis=5)
             np.save(avgfn(fn), [averages, total_frames])
 
     return process

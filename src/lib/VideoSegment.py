@@ -40,7 +40,14 @@ def get_averages(frames):
 
 
 # Loop over entire video and compute averages for all of the frames
-def averages_for_video(filename, window=2500):
+def averages_for_video(filename, fps_divis, window=2500):
+    """
+    fps_divis: terrible name but how many divisions of fps you want for averages. if fps is 30 and fps_divis is 2,
+    grab 15 frames per. Larger the divis, the better the averaging will be for quick moves between frames, but the longer
+    it will take
+    window: how many frames to process at one time (batch, only relates to how much RAM 
+    you're willing to use)
+    """
     averages = []
     total_frames = n = 0
     done = False
