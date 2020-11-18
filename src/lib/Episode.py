@@ -61,6 +61,33 @@ class Episode:
         return f"[{self.video_id}] {self.title}"
 
     @property
+    def guests(ep):
+        name = re.findall(r"#\d\d?\d?\d? ?-?-? .*?([A-Z].*)", ep.title)
+        skip_best = "Best of " in ep.title
+        skip_toon = "JRE Toon" in ep.title
+        skip_fight_companion = "Fight Companion" in ep.title
+        skip_mma = "JRE MMA Show" in ep.title
+        skip_from_jre = "from Joe Rogan" in ep.title or "from JRE" in ep.title
+        skip_questions = "Questions Everything" in ep.title
+        if (
+            skip_best
+            or skip_toon
+            or skip_fight_companion
+            or skip_from_jre
+            or skip_mma
+            or skip_questions
+        ):
+            return ""
+        elif len(name) == 0:
+            return ""
+        else:
+            name = name[0]
+            if not ep.number:
+                return ""
+
+            return name
+
+    @property
     def is_main_episode(ep):
         name = re.findall(r"#\d\d?\d?\d? ?-?-? .*?([A-Z].*)", ep.title)
         skip_best = "Best of " in ep.title
