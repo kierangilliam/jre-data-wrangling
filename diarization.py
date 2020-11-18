@@ -21,7 +21,7 @@ def convert_to_wav(mp4):
     print(mp4, W(mp4))
     sound = pydub.AudioSegment.from_file(mp4, format="mp4")
     print("EXPORT")
-    sound.export("./JOE.wav", format="wav")
+    #sound.export(W(mp4), format="wav")
     sound = None
     return W(mp4)
 
@@ -64,12 +64,18 @@ def chunks(lst, n):
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
+    PROCS = 1
+
+    files = list(glob.glob("../videos/*.mp4"))
+=======
     files = list(glob.glob("../videos/*.mp4"))
     process_files(files)()
 
     """
     PROCS = 1
 
+>>>>>>> 095da7cc889a2ea6d0a7f26be87d010e1f71d4c8
     files = list(chunks(files, len(files) // PROCS))
     starttime = time.time()
     processes = []
@@ -81,5 +87,8 @@ if __name__ == "__main__":
 
     for process in processes:
         process.join()
+<<<<<<< HEAD
+=======
     """
+>>>>>>> 095da7cc889a2ea6d0a7f26be87d010e1f71d4c8
 

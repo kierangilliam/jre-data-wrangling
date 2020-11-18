@@ -11,7 +11,6 @@ import os
 avg_cache = "./data/jre/averages_skip_5/"
 avgfn = lambda x: avg_cache + x.split("../videos/")[1].split(".mp4")[0]
 
-
 def process_files(filenames):
     print(len(filenames))
 
@@ -38,7 +37,7 @@ def chunks(lst, n):
 
 
 if __name__ == "__main__":
-    PROCS = 3
+    PROCS = 8
 
     files = list(glob.glob("../videos/*.mp4"))
     files = [f for f in files if not os.path.exists(avgfn(f) + ".npy")]
