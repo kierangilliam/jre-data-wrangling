@@ -9,5 +9,6 @@ script.txt
 data/jre/audio
 /*/**/.DS_Store
 .DS_Store
-src/tfidf-*.pickle
+src/*.pkl
+src/*.pickle
 src/.ipynb_checkpoints
