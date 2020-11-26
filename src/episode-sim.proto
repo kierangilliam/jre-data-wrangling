@@ -1,0 +1,20 @@
+syntax = "proto2";
+
+message EpisodeSims {
+    repeated EpisodeSim rows = 1;
+}
+
+message IDs {
+    repeated ID rows = 1;
+}
+
+message ID {
+    required string id = 1;
+    required uint32 idNum = 2;
+}
+
+message EpisodeSim {
+    required uint32 idNum1 = 1;
+    required uint32 idNum2 = 2;
+    required float similarity = 3;
+}
