@@ -7,7 +7,7 @@ import time
 import glob
 import os
 
-PROCS = 3
+PROCS = 6
 videos_location = "/Volumes/JRE/jre-bucket/jre/videos/"
 SCALE = 0.25
 GRAYSCALE = False
@@ -58,15 +58,6 @@ if __name__ == "__main__":
 
     files = list(glob.glob(videos_location + "*.mp4"))
     files = [f for f in files if not os.path.exists(avgfn(f) + ".npy")]
-
-    files = [
-        f
-        for f in files
-        if "#1539 - Jenny Kleeman" in f
-        or "#1538 - Douglas Murray" in f
-        or "#1536 - Edward Snowden" in f
-    ]
-    print(files)
 
     files = list(chunks(files, len(files) // PROCS))
     starttime = time.time()

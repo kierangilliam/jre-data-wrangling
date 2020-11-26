@@ -167,16 +167,16 @@ class EpisodeFactory:
         captions_file.close()
 
         ### Get video frame averages
-        AVERAGES = self.folder + "/averages"
-        for file in os.listdir(AVERAGES):
-            video_id = file.strip(".npy")
-            try:
-                episode = [e for e in episodes if e.video_id == video_id][0]
-                episode.video_averages = np.load(
-                    f"{AVERAGES}/{file}", allow_pickle=True
-                )
-            except Exception as e:
-                print("Could not load video average data for ", video_id)
+        # AVERAGES = self.folder + "/averages"
+        # for file in os.listdir(AVERAGES):
+        #     video_id = file.strip(".npy")
+        #     try:
+        #         episode = [e for e in episodes if e.video_id == video_id][0]
+        #         episode.video_averages = np.load(
+        #             f"{AVERAGES}/{file}", allow_pickle=True
+        #         )
+        #     except Exception as e:
+        #         print("Could not load video average data for ", video_id)
 
         ### Get comments for each episode
         if not skip_comments:

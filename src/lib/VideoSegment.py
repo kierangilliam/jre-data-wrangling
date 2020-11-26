@@ -80,7 +80,7 @@ def averages_for_video(
         frames = None
         n += 1
 
-        print(f"{round(n * window / total_frames, 2)}% ({filename[-40:-16]})")
+        # print(f"{round(n * window / total_frames, 2)}% ({filename[-40:-16]})")
 
     cap.release()
 
