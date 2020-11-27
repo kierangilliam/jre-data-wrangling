@@ -1,0 +1,20 @@
+syntax = "proto2";
+
+message Timelines {
+    repeated Timeline timelines = 1;
+}
+
+message Timeline {
+    required string id = 1;
+    repeated Cluster clusters = 2;
+}
+
+message Cluster {
+    required uint32 id = 1;
+    repeated Timestamp timestamps = 2;
+}
+
+message Timestamp {
+    required float start = 1;
+    required float end = 2;
+}

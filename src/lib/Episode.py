@@ -39,6 +39,10 @@ class Episode:
     description: str
     number: str  # Episode number, JRE specific
     published_at: str
+    likes: int
+    dislikes: int
+    comments_count: int
+    views: int
     comments: List[Comment] = None
     captions: List[Caption] = None
     video_averages: np.ndarray = None
@@ -136,11 +140,15 @@ class EpisodeFactory:
         upload_json, upload_file = self.get_json("uploads.json")
         for upload in upload_json:
             episode = Episode()
-            episode.video_id = upload["contentDetails"]["videoId"]
+            episode.video_id = upload["id"]
             episode.channel_id = upload["snippet"]["channelId"]
             episode.published_at = upload["snippet"]["publishedAt"]
             episode.title = upload["snippet"]["title"]
             episode.description = upload["snippet"]["description"]
+            stats = upload["statistics"]
+            episode.likes = stats["likeCount"]
+            episode.dislikes = stats["dislikeCount"]
+            episode.comment_count = stats["commentCount"]
 
             # TODO This could be an MMA show
             number = re.findall(r"#\d\d?\d?\d?", episode.title)
@@ -148,8 +156,8 @@ class EpisodeFactory:
                 episode.number = int(number[0].split("#")[1])
             else:
                 episode.number = None
-            # else:
-            #     print("Could not get number for episode", episode.title)
+                if episode.is_main_episode:
+                    print("Could not get number for episode", episode.title)
 
             episodes.append(episode)
         upload_file.close()
