@@ -1,7 +1,7 @@
 import multiprocessing
 import sys
 
-from src.lib.VideoSegment import averages_for_video
+from src.lib.VideoAverages import averages_for_video
 import numpy as np
 import time
 import glob
