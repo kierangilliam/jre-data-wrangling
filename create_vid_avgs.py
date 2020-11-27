@@ -6,8 +6,9 @@ import numpy as np
 import time
 import glob
 import os
+from random import shuffle
 
-PROCS = 6
+PROCS = 7
 videos_location = "/Volumes/JRE/jre-bucket/jre/videos/"
 SCALE = 0.25
 GRAYSCALE = False
@@ -58,6 +59,7 @@ if __name__ == "__main__":
 
     files = list(glob.glob(videos_location + "*.mp4"))
     files = [f for f in files if not os.path.exists(avgfn(f) + ".npy")]
+    shuffle(files)
 
     files = list(chunks(files, len(files) // PROCS))
     starttime = time.time()
