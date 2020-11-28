@@ -146,6 +146,7 @@ class EpisodeFactory:
             episode.title = upload["snippet"]["title"]
             episode.description = upload["snippet"]["description"]
             stats = upload["statistics"]
+            episode.views = stats["viewCount"]
             episode.likes = stats["likeCount"]
             episode.dislikes = stats["dislikeCount"]
             episode.comment_count = stats["commentCount"]

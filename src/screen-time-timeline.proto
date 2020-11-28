@@ -7,6 +7,7 @@ message Timelines {
 message Timeline {
     required string id = 1;
     repeated Cluster clusters = 2;
+    required uint64 frames = 3;
 }
 
 message Cluster {

@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto2',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x1ascreen-time-timeline.proto\")\n\tTimelines\x12\x1c\n\ttimelines\x18\x01 \x03(\x0b\x32\t.Timeline\"2\n\x08Timeline\x12\n\n\x02id\x18\x01 \x02(\t\x12\x1a\n\x08\x63lusters\x18\x02 \x03(\x0b\x32\x08.Cluster\"5\n\x07\x43luster\x12\n\n\x02id\x18\x01 \x02(\r\x12\x1e\n\ntimestamps\x18\x02 \x03(\x0b\x32\n.Timestamp\"\'\n\tTimestamp\x12\r\n\x05start\x18\x01 \x02(\x02\x12\x0b\n\x03\x65nd\x18\x02 \x02(\x02'
+  serialized_pb=b'\n\x1ascreen-time-timeline.proto\")\n\tTimelines\x12\x1c\n\ttimelines\x18\x01 \x03(\x0b\x32\t.Timeline\"B\n\x08Timeline\x12\n\n\x02id\x18\x01 \x02(\t\x12\x1a\n\x08\x63lusters\x18\x02 \x03(\x0b\x32\x08.Cluster\x12\x0e\n\x06\x66rames\x18\x03 \x02(\x04\"5\n\x07\x43luster\x12\n\n\x02id\x18\x01 \x02(\r\x12\x1e\n\ntimestamps\x18\x02 \x03(\x0b\x32\n.Timestamp\"\'\n\tTimestamp\x12\r\n\x05start\x18\x01 \x02(\x02\x12\x0b\n\x03\x65nd\x18\x02 \x02(\x02'
 )
 
 
@@ -79,6 +79,13 @@ _TIMELINE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='frames', full_name='Timeline.frames', index=2,
+      number=3, type=4, cpp_type=4, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -92,7 +99,7 @@ _TIMELINE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=73,
-  serialized_end=123,
+  serialized_end=139,
 )
 
 
@@ -130,8 +137,8 @@ _CLUSTER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=125,
-  serialized_end=178,
+  serialized_start=141,
+  serialized_end=194,
 )
 
 
@@ -169,8 +176,8 @@ _TIMESTAMP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=180,
-  serialized_end=219,
+  serialized_start=196,
+  serialized_end=235,
 )
 
 _TIMELINES.fields_by_name['timelines'].message_type = _TIMELINE
