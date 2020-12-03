@@ -8,14 +8,16 @@ import glob
 import os
 from random import shuffle
 
-PROCS = 7
-videos_location = "/Volumes/JRE/jre-bucket/jre/videos/"
+PROCS = 2
+ID = "lex"
+#videos_location = f"../videos/{ID}/"
+videos_location = f"/mnt/volume_sfo2_01/lex/"
 SCALE = 0.25
 GRAYSCALE = False
 # TODO COMPARE SPEED WITH/WITHOUT GRAYSCALE
 # FPS_DIVIS = 15
 avg_cache = (
-    f"./data/jre/averages_scale.{SCALE*100}_"
+    f"./data/{ID}/averages_scale.{SCALE*100}_"
     + ("grayscale" if GRAYSCALE else "color")
     + "/"
 )
@@ -33,7 +35,7 @@ def process_files(filenames):
             print(
                 f"{round(i/len(filenames),3)*100} - [{i}/{len(filenames)}]",
                 fn,
-                # flush=True,
+                flush=True,
             )
             averages, total_frames = averages_for_video(
                 fn, scale=SCALE, grayscale=GRAYSCALE
@@ -60,6 +62,8 @@ if __name__ == "__main__":
     files = list(glob.glob(videos_location + "*.mp4"))
     files = [f for f in files if not os.path.exists(avgfn(f) + ".npy")]
     shuffle(files)
+    
+    print(len(files))
 
     files = list(chunks(files, len(files) // PROCS))
     starttime = time.time()
