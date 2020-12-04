@@ -9,18 +9,21 @@ import os
 from random import shuffle
 
 PROCS = 2
-ID = "lex"
-#videos_location = f"../videos/{ID}/"
-videos_location = f"/mnt/volume_sfo2_01/lex/"
-SCALE = 0.25
+ID = "flagrant2"
+videos_location = f"/mnt/volume_sfo2_01/{ID}/"
+SCALE = 0.5
 GRAYSCALE = False
-# TODO COMPARE SPEED WITH/WITHOUT GRAYSCALE
-# FPS_DIVIS = 15
 avg_cache = (
     f"./data/{ID}/averages_scale.{SCALE*100}_"
     + ("grayscale" if GRAYSCALE else "color")
     + "/"
 )
+
+
+if not os.path.exists(avg_cache):
+    print("Making directory to store averages...", avg_cache)
+    os.makedirs(avg_cache)
+
 avgfn = lambda x: avg_cache + x.split(videos_location)[1].split(".mp4")[0]
 
 
@@ -64,6 +67,7 @@ if __name__ == "__main__":
     shuffle(files)
     
     print(len(files))
+    print(f"Running on {PROCS} processes")
 
     files = list(chunks(files, len(files) // PROCS))
     starttime = time.time()

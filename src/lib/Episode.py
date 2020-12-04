@@ -147,9 +147,10 @@ class EpisodeFactory:
             episode.description = upload["snippet"]["description"]
             stats = upload["statistics"]
             episode.views = stats["viewCount"]
-            episode.likes = stats["likeCount"]
-            episode.dislikes = stats["dislikeCount"]
-            episode.comment_count = stats["commentCount"]
+            # These items could be turned off
+            episode.likes = stats.get("likeCount", None)
+            episode.dislikes = stats.get("dislikeCount", None)
+            episode.comment_count = stats.get("commentCount", None)
 
             # TODO This could be an MMA show
             number = re.findall(r"#\d\d?\d?\d?", episode.title)

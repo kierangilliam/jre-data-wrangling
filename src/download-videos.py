@@ -8,12 +8,20 @@ from lib.Episode import Episode, EpisodeFactory
 import os
 import shutil
 
-ID = "lex"
+class NoDiskSpaceLeft(Exception):
+    pass
+
+ID = "flagrant2"
 BASE = f"../data/{ID}"
-VIDEOS_LOCATION = f"../../videos/{ID}/"
+#VIDEOS_LOCATION = f"../../videos/{ID}/"
+VIDEOS_LOCATION = f"/mnt/volume_sfo2_01/{ID}/"
 CACHE = f"./{ID}-episodes.pickle"
-CREATE_CACHE = False
+CREATE_CACHE = True
 ONLY_DOWNLOAD_MAIN = False
+
+if not os.path.exists(VIDEOS_LOCATION):
+    print("Making videos destination...", VIDEOS_LOCATION)
+    os.makedirs(VIDEOS_LOCATION)
 
 if CREATE_CACHE == True:
     print(f"Generating new pickle {CACHE}...")
@@ -51,6 +59,20 @@ ydl = youtube_dl.YoutubeDL(
     }
 )
 
+# Move files that did not get moved from current dir
+if len(list(glob("./*.mp4"))) > 0:
+    print("Moving files from current dir to external video location")
+    for ep in eps:
+        results = list(glob(f"./*{ep.video_id}.mp4"))
+        if len(results) == 0:
+            continue
+        try:
+            file = results[0]
+            shutil.move(f"./{file}", VIDEOS_LOCATION + f"{ep.video_id}.mp4")
+            print(f"Moved {ep.video_id}")
+        except Exception as e:
+            print(e)
+
 downloaded = 0
 with ydl:
     for ep in tqdm(missing_videos):
@@ -65,8 +87,13 @@ with ydl:
                 file = list(glob(f"./*{ep.video_id}.mp4"))[0]
                 shutil.move(f"./{file}", VIDEOS_LOCATION + f"{ep.video_id}.mp4")
             except Exception as e:
+                if "No space left on device" in str(e):
+                    raise NoDiskSpaceLeft(ep.video_id)
+
                 print("Could not move", ep, e)
 
+        except NoDiskSpaceLeft as e:
+            raise Exception("No disk space left", e)
         except Exception as e:
             print("could not download", ep.title)
 
